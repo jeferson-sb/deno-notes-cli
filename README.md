@@ -2,9 +2,11 @@
 
 Create simple notes in json format from the command line usign Deno
 
+![alt terminal](./example.png)
+
 ## 🦕 About Deno
 
-Deno is secure runtime for JavaScript and TypeScript.
+[Deno](https://deno.land/) is a secure runtime for JavaScript and TypeScript.
 
 - It is written in Rust and TypeScript and built on top of V8 Engine.
 - It is based on modern features of the JavaScript
@@ -46,7 +48,7 @@ $ choco install deno
 
 ```bash
 $ cd deno-notes-cli
-$ deno run --unstable --allow-write --allow-read src/app.ts <command>
+$ deno run --unstable --allow-write --allow-read src/app.ts
 ```
 
 ## 🖥️ Avaliable Commands
