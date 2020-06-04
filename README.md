@@ -55,11 +55,11 @@ $ deno run --unstable --allow-write --allow-read src/app.ts
 
 | name   | example                                                                                                             |
 | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| add    | deno run --unstable --allow-write --allow-read src/app.ts **add** "Note Three:This is my new note"                  |
+| add    | deno run --unstable --allow-write --allow-read src/app.ts **add** "Note Three" "This is my new note"                |
 | list   | deno run --unstable --allow-write --allow-read src/app.ts **list**                                                  |
 | read   | deno run --unstable --allow-read src/app.ts **read** "Note One"                                                     |
-| update | deno run --unstable --allow-write --allow-read src/app.ts **update** "Note Three:Note Updated:This is my new body". |
-| remove | deno run --unstable --allow-write --allow-read src/app.ts **remove** "Note Three".                                  |
+| update | deno run --unstable -A src/app.ts **update** "Note Three" "Note Updated" "This is my new body"                     |
+| remove | deno run --unstable --allow-write --allow-read src/app.ts **remove** "Note Three"                                  |
 
 ## 📝 License
 
