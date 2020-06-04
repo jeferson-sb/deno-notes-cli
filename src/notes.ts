@@ -7,7 +7,6 @@ import iro, {
   bold,
   yellow,
   inverse,
-  green,
   red,
   bgGreen,
 } from 'https://deno.land/x/iro/src/iro.ts';
@@ -53,9 +52,12 @@ export function createNote({ title, body }: INote) {
     console.log(iro('Note title already taken!', inverse, red));
   }
 }
+
 export function readNote(title = 'Untitled') {
   const notesList = fetchNotes();
-  const searchedNote = notesList.find((note: INote) => note.title === title);
+  const searchedNote = notesList.find((note: INote) => {
+    return note.title.toLocaleLowerCase() === title.toLocaleLowerCase();
+  });
   if (searchedNote) {
     console.log(iro(searchedNote.title, inverse));
     console.log(searchedNote.body);
@@ -63,6 +65,7 @@ export function readNote(title = 'Untitled') {
     console.log(iro('Note not found!', bold, inverse, red));
   }
 }
+
 export function removeNote(title: string) {
   const notesList = fetchNotes();
   const notesToKeep = notesList.filter(

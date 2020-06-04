@@ -10,13 +10,20 @@ const program = new Denomander({
   app_version: '1.0.0',
 });
 
+interface INote {
+  title: string;
+  body: string;
+  newTitle?: string;
+  newBody?: string;
+}
+
 // Add command
 program
-  .command('add [title:body]')
+  .command('add [title] [body]')
   .description('Add a new note')
-  .action((note: string) => {
-    const [title, body] = note.split(':');
-    notes.createNote({ title, body });
+  .action(({ title, body }: INote) => {
+    const note = { title, body };
+    notes.createNote(note);
   });
 
 // List command
@@ -31,24 +38,23 @@ program
 program
   .command('read [title]')
   .description('Read a note')
-  .action((title: string) => {
+  .action(({ title }: INote) => {
     notes.readNote(title);
   });
 
 // Update command
 program
-  .command('update [title:newTitle:newBody]')
+  .command('update [title] [newTitle] [newBody]')
   .description('Update a note')
-  .action((note: string) => {
-    const [title, newTitle, newBody] = note.split(':');
-    notes.updateNote(title, newBody, newTitle);
+  .action(({ title, newTitle, newBody }: INote) => {
+    notes.updateNote(title, String(newBody), String(newTitle));
   });
 
 // Remove command
 program
   .command('remove [title]')
   .description('Remove a note')
-  .action((title: string) => {
+  .action(({ title }: INote) => {
     notes.removeNote(title);
   });
 
