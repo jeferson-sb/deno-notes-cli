@@ -1,6 +1,6 @@
 # Deno Notes Cli App
 
-Create simple notes in json format from the command line usign Deno
+Create simple notes in json format from the command line using Deno
 
 ![alt terminal](./example.png)
 
@@ -60,7 +60,7 @@ $ deno run --unstable --allow-write --allow-read src/app.ts
 | list   | deno run --unstable --allow-read src/app.ts **list**                 |
 | read   | deno run --unstable --allow-read src/app.ts **read**                 |
 | update | deno run --unstable --allow-write --allow-read src/app.ts **update** |
-| remove | deno run --unstable --allow-write --allow-read src/app.ts remove     |
+| remove | deno run --unstable --allow-write --allow-read src/app.ts **remove** |
 
 ## 📝 License
 
