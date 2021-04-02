@@ -5,25 +5,19 @@ import Denomander from 'https://deno.land/x/denomander/mod.ts';
 import * as notes from './notes.ts';
 
 const program = new Denomander({
-  app_name: 'Notes App',
+  app_name: 'Deno Notes App',
   app_description: 'Create notes in json format from the command line',
-  app_version: '1.0.0',
+  app_version: '1.1.0',
 });
-
-interface INote {
-  title: string;
-  body: string;
-  newTitle?: string;
-  newBody?: string;
-}
 
 // Add command
 program
-  .command('add [title] [body]')
+  .command('add')
   .description('Add a new note')
-  .action(({ title, body }: INote) => {
-    const note = { title, body };
-    notes.createNote(note);
+  .action(() => {
+    const title = prompt('Note title:') ?? 'Note three';
+    const body = prompt('Note body:') ?? '';
+    notes.createNote({ title, body });
   });
 
 // List command
@@ -36,25 +30,32 @@ program
 
 // Read command
 program
-  .command('read [title]')
+  .command('read')
   .description('Read a note')
-  .action(({ title }: INote) => {
+  .action(() => {
+    const title = prompt('Note title: ') ?? 'Note one';
     notes.readNote(title);
   });
 
 // Update command
 program
-  .command('update [title] [newTitle] [newBody]')
+  .command('update')
   .description('Update a note')
-  .action(({ title, newTitle, newBody }: INote) => {
-    notes.updateNote(title, String(newBody), String(newTitle));
+  .action(() => {
+    const existingNote = prompt(
+      'What note do you want to update? [title]'
+    ) as string;
+    const title = prompt('New title:') ?? 'Note one';
+    const body = prompt('New body:') ?? '';
+    notes.updateNote(existingNote, { title, body });
   });
 
 // Remove command
 program
-  .command('remove [title]')
+  .command('remove')
   .description('Remove a note')
-  .action(({ title }: INote) => {
+  .action(() => {
+    const title = prompt('Note title:') ?? 'Note one';
     notes.removeNote(title);
   });
 
