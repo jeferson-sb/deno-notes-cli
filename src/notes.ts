@@ -1,35 +1,36 @@
 // Standard deno modules
-import { readJsonSync, writeJsonSync } from 'https://deno.land/std/fs/mod.ts';
 import * as path from 'https://deno.land/std/path/mod.ts';
 
 // Thirty party modules
 import iro, {
+  bgGreen,
   bold,
-  yellow,
   inverse,
   red,
-  bgGreen,
+  yellow,
 } from 'https://deno.land/x/iro/src/iro.ts';
 
 const currentDir = Deno.cwd();
-const notesFilePath = path.resolve(`${currentDir}/data/notes-data.json`);
+const notesFilePath = path.resolve(currentDir, 'data', 'notes-data.json');
 
-interface INote {
+interface Note {
   title: string;
   body: string;
 }
 
-export function fetchNotes() {
+export async function fetchNotes() {
   try {
-    const notesParsed: any = readJsonSync(notesFilePath);
-    return notesParsed;
+    const file = await Deno.readTextFile(notesFilePath);
+    const notes: Note[] = JSON.parse(file);
+    return notes;
   } catch (error) {
     console.error(error);
     return [];
   }
 }
-export function listNotes() {
-  const notesList: INote[] = fetchNotes();
+
+export async function listNotes() {
+  const notesList: Note[] = await fetchNotes();
 
   console.log(iro(' Your notes ', inverse));
   for (const note of notesList) {
@@ -37,27 +38,34 @@ export function listNotes() {
     console.log('●'.padStart(5), note.body);
   }
 }
-export function saveNotes(notes: INote[]) {
-  writeJsonSync(notesFilePath, notes, { spaces: 2 });
+
+export async function saveNotes(notes: Note[]) {
+  try {
+    await Deno.writeTextFile(notesFilePath, JSON.stringify(notes));
+  } catch (error) {
+    throw new Error(`Unable to write contents to file: ${error}`);
+  }
 }
-export function createNote({ title, body }: INote) {
-  const notesList = fetchNotes();
-  const isDuplicate = notesList.find((note: INote) => note.title === title);
+
+export async function createNote({ title, body }: Note) {
+  const notesList = await fetchNotes();
+  const isDuplicate = notesList.find((note: Note) => note.title === title);
   if (!isDuplicate) {
     notesList.push({ title, body });
-    saveNotes(notesList);
+    await saveNotes(notesList);
 
-    console.log(iro('New note added!', bgGreen));
+    console.log(iro('New note added!', bold, bgGreen));
   } else {
     console.log(iro('Note title already taken!', inverse, red));
   }
 }
 
-export function readNote(title = 'Untitled') {
-  const notesList = fetchNotes();
-  const searchedNote = notesList.find((note: INote) => {
-    return note.title.toLocaleLowerCase() === title.toLocaleLowerCase();
+export async function readNote(noteTitle: string) {
+  const notesList = await fetchNotes();
+  const searchedNote = notesList.find((note: Note) => {
+    return note.title.toLocaleLowerCase() === noteTitle.toLocaleLowerCase();
   });
+
   if (searchedNote) {
     console.log(iro(searchedNote.title, inverse));
     console.log(searchedNote.body);
@@ -66,13 +74,13 @@ export function readNote(title = 'Untitled') {
   }
 }
 
-export function removeNote(title: string) {
-  const notesList = fetchNotes();
+export async function removeNote(title: string) {
+  const notesList = await fetchNotes();
   const notesToKeep = notesList.filter(
-    (note: INote) => note.title.toLowerCase() !== title.toLowerCase()
+    (note: Note) => note.title.toLowerCase() !== title.toLowerCase()
   );
   if (notesList.length > notesToKeep.length) {
-    saveNotes(notesToKeep);
+    await saveNotes(notesToKeep);
 
     console.log(iro('Note removed!', bgGreen));
   } else {
@@ -80,15 +88,16 @@ export function removeNote(title: string) {
   }
 }
 
-export function updateNote(title: string, newBody: string, newTitle: string) {
-  const notesList = fetchNotes();
+export async function updateNote(note: string, { title, body }: Partial<Note>) {
+  const notesList = await fetchNotes();
   const currentNote = notesList.find(
-    (note: INote) => note.title.toLowerCase() === title.toLowerCase()
+    (n: Note) => n.title.toLowerCase() === note.toLowerCase()
   );
-  const newNote = { title: newTitle, body: newBody };
+  const newNote = { title, body } as Note;
+
   if (currentNote) {
     notesList.splice(notesList.indexOf(currentNote), 1, newNote);
-    saveNotes(notesList);
+    await saveNotes(notesList);
 
     console.log(iro('Note updated!', bgGreen));
   } else {
