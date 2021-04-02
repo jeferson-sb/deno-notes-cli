@@ -2,6 +2,8 @@
 
 Create simple notes in json format from the command line using Deno
 
+> ## This is application is part of [my article about Deno](https://dev.to/jeferson_sb/create-a-simple-note-taking-app-with-deno-3k7g)
+
 ![alt terminal](./example.png)
 
 ## 🦕 About Deno
@@ -61,6 +63,8 @@ $ deno run --unstable --allow-write --allow-read src/app.ts
 | read   | deno run --unstable --allow-read src/app.ts **read**                 |
 | update | deno run --unstable --allow-write --allow-read src/app.ts **update** |
 | remove | deno run --unstable --allow-write --allow-read src/app.ts **remove** |
+
+You can also use makefile to short the commands by running `make add`, `make list`, `make read`, etc.
 
 ## 📝 License
 
